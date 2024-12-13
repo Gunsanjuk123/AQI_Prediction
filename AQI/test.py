@@ -2,11 +2,11 @@ import streamlit as st
 import pandas as pd
 import pickle
 
-# Load the trained model
+
 with open('aqi_model.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
-# CSS for styling
+
 st.markdown(
     """
     <style>
@@ -71,11 +71,11 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# App Header
+
 st.markdown('<div class="main-title">AQI Prediction Dashboard</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Monitor real-time air quality predictions</div>', unsafe_allow_html=True)
 
-# Sidebar Inputs
+
 st.header("Input Parameters")
 aqi_categories = ['Good', 'Moderate', 'Unhealthy for Sensitive Groups', 'Unhealthy', 'Very Unhealthy', 'Hazardous']
 
@@ -99,11 +99,10 @@ with col4:
 with col5:
     PM25_AQI_Value = st.slider("PM10 AQI Value", 0.0, 500.0, 50.0, step=0.1)
 
-# Convert Categories to Numeric Indices
+
 def category_to_numeric(category, categories):
     return categories.index(category)
 
-# Live Prediction
 input_data = pd.DataFrame({
     'CO AQI Value': [CO_AQI_Value],
     'Ozone AQI Value': [Ozone_AQI_Value],
@@ -112,7 +111,7 @@ input_data = pd.DataFrame({
     'PM2.5 AQI Value': [PM25_AQI_Value],
 })
 
-# Define AQI thresholds and alert messages
+
 def get_alert(aqi_value):
     if aqi_value <= 50:
         return "Good", "Good Air Quality: Predicted AQI Value is {:.2f}".format(aqi_value), "#2ecc71"
@@ -127,11 +126,11 @@ def get_alert(aqi_value):
     else:
         return "Hazardous", "Hazardous Air Quality: Predicted AQI Value is {:.2f}".format(aqi_value), "#c0392b"
 
-# Prediction and Alert
+
 prediction = model.predict(input_data)[0]
 alert_category, alert_message, alert_color = get_alert(prediction)
 
-# Display Results
+
 col1, col2 = st.columns(2)
 
 with col1:
@@ -153,7 +152,6 @@ with col2:
         unsafe_allow_html=True,
     )
 
-# Separate column for suffocation alert, shown only for "Unhealthy" or worse
 if prediction >= 200:
     suffocation_message = "Warning: The air quality is unhealthy and may cause suffocation risks!"
     st.markdown(
