@@ -3,7 +3,7 @@ import pandas as pd
 import pickle
 
 
-with open('aqi_model.pkl', 'rb') as model_file:
+with open('AQI_model.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
 
